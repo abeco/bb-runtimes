@@ -1,24 +1,26 @@
 -- with Interfaces.SAM.PM; use Interfaces.SAM.PM;
 with Interfaces.SAM.PORT; use Interfaces.SAM.PORT;
 with Interfaces.SAM; use Interfaces.SAM;
-with Setup_Pll;
+With System.Machine_Code; use System.Machine_Code;
 
 procedure Blink is
-
-   PA15_MASK : constant UInt32 := 2#00000000_00000010_00000000_00000000#;
+   PA17_MASK : constant UInt32 := 2#00000000_00000010_00000000_00000000#;
+   --  PB03_Mask : constant UInt32 := 2#00000000_00000000_00000000_00001000#;
+   --  PA17 is the onboard LED, PB03 is the RX LED
 
 begin
-   --  Setup_Pll;
-
-   PORT_Periph.DIRSET0 := PA15_MASK;
+   PORT_Periph.DIRSET0 := PA17_MASK;
+   --  PORT_Periph.DIRSET1 := PB03_Mask;
 
    loop
       for I in 1 .. 500_000 loop
-         null;
+         --  null;  -- this kept getting optimized away
+         Asm ("");
       end loop;
-   PORT_Periph.OUTTGL0 := PA15_MASK;
+
+      PORT_Periph.OUTTGL0 := PA17_MASK;
+      --  PORT_Periph.OUTTGL1 := PB03_Mask;
    end loop;
-   -- null;
 end Blink;
 
 --  Notes
@@ -33,6 +35,6 @@ end Blink;
 --  See 23.6.3.1 for more on configuring a port pin
 
 --  Need to write bit Y of DIR reg to set DIRSET for indiv pin
---  So for pin PA15 I need to write the 16th bit of 
+--  So for pin PA17 I need to write the 18th bit of 
 --  these regs to do what I want
---  Mask: 00000000_00000000_10000000_00000000
+--  Mask: 00000000_00000010_00000000_00000000

@@ -773,8 +773,8 @@ class SAMD21(ArmV6MTarget):
         self.board = board
         super(SAMD21, self).__init__()
 
-        self.add_linker_script('arm/sam/samd21/common-ROM.ld', loader='ROM')
         self.add_linker_script('arm/sam/samd21/memory-map.ld', loader='ROM')
+        self.add_linker_script('arm/sam/samd21/common-ROM.ld', loader='ROM')
 
         self.add_gnat_sources(
             'src/s-bbarat.ads',
